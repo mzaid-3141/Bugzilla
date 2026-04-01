@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-# ---------------- USER ----------------
 class UserCreate(BaseModel):
     name: str
     email: str
@@ -13,7 +12,6 @@ class UserResponse(UserCreate):
         orm_mode = True
 
 
-# ---------------- PROJECT ----------------
 class ProjectCreate(BaseModel):
     name: str
     description: str
@@ -26,7 +24,6 @@ class ProjectResponse(ProjectCreate):
         orm_mode = True
 
 
-# ---------------- BUG ----------------
 class BugCreate(BaseModel):
     title: str
     description: str
@@ -41,7 +38,6 @@ class BugResponse(BugCreate):
         orm_mode = True
 
 
-# ---------------- COMMENT ----------------
 class CommentCreate(BaseModel):
     text: str
     user_id: int
@@ -52,3 +48,8 @@ class CommentResponse(CommentCreate):
 
     class Config:
         from_attributes = True
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str

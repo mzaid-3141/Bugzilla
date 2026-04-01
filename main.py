@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from router import router
 
 import models, schemas
 from database import engine, SessionLocal
@@ -16,6 +17,4 @@ def get_db():
         db.close()
 
 
-@app.get("/")
-def root():
-    return {"message": "Bugzilla API is running"}
+app.include_router(router)

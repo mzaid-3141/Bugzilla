@@ -16,6 +16,7 @@ class User(Base):
     name = Column(String)
     email = Column(String, unique=True)
     role = Column(String, nullable=False)
+    password = Column(String, nullable=False)
     projects = relationship("Project", secondary=project_users, back_populates="users")
 
 class Project(Base):
@@ -34,6 +35,7 @@ class Bug(Base):
     title = Column(String)
     description = Column(String)
     status = Column(String)
+    solution = Column(String, nullable=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     reported_by = Column(Integer, ForeignKey("users.id"))
 
