@@ -35,9 +35,9 @@ class Bug(Base):
     title = Column(String)
     description = Column(String)
     status = Column(String)
-    solution = Column(String, nullable=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     reported_by = Column(Integer, ForeignKey("users.id"))
+    assigned_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 class Comment(Base):
     __tablename__ = "comments"

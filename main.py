@@ -1,20 +1,15 @@
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 from router import router
 
-import models, schemas
-from database import engine, SessionLocal
+import models
+from database import engine
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 app.include_router(router)
+
+@router.get("/")
+def root():
+    return {"message": "Router working"}
