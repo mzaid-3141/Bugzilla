@@ -9,7 +9,7 @@ class UserResponse(UserCreate):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ProjectCreate(BaseModel):
@@ -21,7 +21,7 @@ class ProjectResponse(ProjectCreate):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BugCreate(BaseModel):
@@ -30,12 +30,13 @@ class BugCreate(BaseModel):
     status: str
     project_id: int
     reported_by: int
+    assigned_id: int
 
 class BugResponse(BugCreate):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class CommentCreate(BaseModel):
@@ -53,3 +54,10 @@ class CommentResponse(CommentCreate):
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+
+class UserWithProject(BaseModel):
+    name: str
+    email: str
+    role: str
+    project_id: int
