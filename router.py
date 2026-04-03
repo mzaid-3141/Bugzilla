@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 from database import SessionLocal
 import services
 import os
+from auth import get_current_user 
+
 
 router = APIRouter()
 
@@ -13,7 +15,6 @@ security = HTTPBearer()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
-
 
 def get_db():
     db = SessionLocal()
@@ -105,3 +106,66 @@ def reopen_bug(bug_id: int,
                db: Session = Depends(get_db),
                current_user=Depends(require_role(["qa"]))):
     return services.reopen_bug(db, bug_id, data)
+
+
+@router.get("/admin/users")
+def get_users(db: Session = Depends(get_db),
+              current_user=Depends(get_current_user)):
+
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return services.get_all_users(db)
+
+
+@router.get("/admin/projects")
+def get_projects(db: Session = Depends(get_db),
+                 current_user=Depends(get_current_user)):
+
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return services.get_all_projects(db)
+
+
+@router.get("/admin/bugs")
+def get_bugs(db: Session = Depends(get_db),
+             current_user=Depends(get_current_user)):
+
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return services.get_all_bugs(db)
+
+
+
+@router.get("/manager/bugs")
+def manager_bugs(db: Session = Depends(get_db),
+                 current_user=Depends(get_current_user)):
+
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return services.get_manager_bugs(db, current_user.id)
+
+
+
+@router.get("/developer/bugs")
+def developer_bugs(db: Session = Depends(get_db),
+                   current_user=Depends(get_current_user)):
+
+    if current_user.role != "developer":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return services.get_developer_bugs(db, current_user.id)
+
+
+
+@router.get("/qa/bugs/resolved")
+def qa_resolved_bugs(db: Session = Depends(get_db),
+                     current_user=Depends(get_current_user)):
+
+    if current_user.role != "qa":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return services.get_resolved_bugs(db)
